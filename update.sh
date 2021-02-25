@@ -1,2 +1,2 @@
 #!/bin/bash
-#Author:SuperManito
+## Author:SuperManito

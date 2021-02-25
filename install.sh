@@ -1,39 +1,49 @@
 #!/bin/bash
-#Author:SuperManito
-#Modified:2021-2-1
+## Author:SuperManito
+## Modified:2021-2-25
 
-## 项目名称:《京东薅羊毛》一键部署 For Linux，通过参与京东商城的各种活动白嫖京豆
-## 适用系统: Ubuntu 16.04 ~ 20.10 | Debian 9.0 ~ 10.7 | CentOS 8.0 ~ 8.3 | Fedora 32 ~ 33
-## 请确认安装环境是否支持简体中文，CentOS如果是最小化安装，请通过SSH方式进入到终端
+## ============================================== 项 目 说 明 ==============================================
+##                                                                                                        #
+## 项目名称：《京东薅羊毛》一键部署 For Linux                                                                #
+## 项目用途：通过参与京东商城的各种活动白嫖京豆                                                               #
+## 适用系统：Ubuntu 16.04 ~ 20.10    Fedora 28 ~ 33                                                        #
+##          Debian 9.0 ~ 10.7       CentOS 7.0 ~ 8.3                                                      #
+## 温馨提示：尽量使用最新的稳定版系统，并且安装语言使用简体中文，CentOS如果是最小化安装，请通过SSH方式进入到终端   #
+##                                                                                                        #
+## 本项目基于 Evine 公布的源码，活动脚本基于 lxk0301 大佬的 jd_scripts 项目                                   #
+## 本人能力有限，这可能是最终版本，感谢 Evine 对此项目做出的贡献                                               #
+## 核心活动脚本项目地址：https://gitee.com/lxk0301/jd_scripts/tree/master                                   #
+##                                                                                                        #
+## ========================================================================================================
 
-## 如果需要在此一键脚本中直接配置Config配置文件，请定义下面的变量
-## 本项目可同时运行无限个账号，从第7个账户开始需要自行在项目Config.sh配置文件中定义变量
-
-## 将Cookie部分内容填入"双引号"内：
-## 例：COOKIE1='"pt_key=xxxxxx;pt_pin=xxxxxx;"'
+## ======================================= 本 地 部 署 定 义 的 变 量 =======================================
+## 安装目录
+BASE="/opt/jd"
+## 京东账户
 COOKIE1='""'
 COOKIE2='""'
 COOKIE3='""'
 COOKIE4='""'
 COOKIE5='""'
 COOKIE6='""'
-
-## Server酱微信推送功能，将SCKEY填入"双引号"内：
-SERVERJIANG='""'
-
+##
+## 配置京东账户注意事项：
+## 1. 将 Cookie部分内容 填入"双引号"内，例 COOKIE1='"pt_key=xxxxxx;pt_pin=xxxxxx;"'
+## 2. 本项目可同时运行无限个账号，从第7个账户开始需要自行在项目 config.sh 配置文件中定义变量例如Cookie7=""
+## ========================================================================================================
 
 ## 环境判定：
 function EnvJudgment() {
   ## 当前用户判定：
   if [ $UID -ne 0 ]; then
     echo -e '\033[31m ------------ Permission no enough, please use user ROOT! ------------ \033[0m'
-    return
+    exit
   fi
   ## 网络环境判定：
   ping -c 1 www.baidu.com >/dev/null 2>&1
   if [ $? -ne 0 ]; then
     echo -e "\033[31m ----- Network connection error.Please check the network environment and try again later! ----- \033[0m"
-    return
+    exit
   fi
 }
 
@@ -46,7 +56,7 @@ function SystemJudgment() {
   else
     SYSTEM="Debian"
   fi
-  ## 定义一些变量
+  ## 定义一些变量（系统名称、系统版本、系统版本号）
   if [ $SYSTEM = "Debian" ]; then
     SYSTEM_NAME=$(lsb_release -is)
     SYSTEM_VERSION=$(lsb_release -cs)
@@ -63,6 +73,7 @@ function SystemJudgment() {
 
 ## 更换国内源：
 function ReplaceMirror() {
+  ## 由此到第1000行的内容均为更换国内更新源
   echo -e '\033[37m+---------------------------------------------------+ \033[0m'
   echo -e '\033[37m|                                                   | \033[0m'
   echo -e '\033[37m|   =============================================   | \033[0m'
@@ -221,22 +232,29 @@ function RedHatMirrors() {
     sed -i "s|mirror.centos.org|$SOURCE|g" /etc/yum.repos.d/*
   elif [ $SYSTEM_NAME = "Fedora" ]; then
     sed -i 's|^metalink=|#metalink=|g' \
-    /etc/yum.repos.d/fedora.repo \
-    /etc/yum.repos.d/fedora-updates.repo \
-    /etc/yum.repos.d/fedora-modular.repo \
-    /etc/yum.repos.d/fedora-updates-modular.repo \
-    /etc/yum.repos.d/fedora-updates-testing.repo \
-    /etc/yum.repos.d/fedora-updates-testing-modular.repo
+      /etc/yum.repos.d/fedora.repo \
+      /etc/yum.repos.d/fedora-updates.repo \
+      /etc/yum.repos.d/fedora-modular.repo \
+      /etc/yum.repos.d/fedora-updates-modular.repo \
+      /etc/yum.repos.d/fedora-updates-testing.repo \
+      /etc/yum.repos.d/fedora-updates-testing-modular.repo
     sed -i 's|^#baseurl=|baseurl=|g' /etc/yum.repos.d/*
     sed -i "s|http://download.example/pub/fedora/linux|https://$SOURCE/fedora|g" \
-    /etc/yum.repos.d/fedora.repo \
-    /etc/yum.repos.d/fedora-updates.repo \
-    /etc/yum.repos.d/fedora-modular.repo \
-    /etc/yum.repos.d/fedora-updates-modular.repo \
-    /etc/yum.repos.d/fedora-updates-testing.repo \
-    /etc/yum.repos.d/fedora-updates-testing-modular.repo
+      /etc/yum.repos.d/fedora.repo \
+      /etc/yum.repos.d/fedora-updates.repo \
+      /etc/yum.repos.d/fedora-modular.repo \
+      /etc/yum.repos.d/fedora-updates-modular.repo \
+      /etc/yum.repos.d/fedora-updates-testing.repo \
+      /etc/yum.repos.d/fedora-updates-testing-modular.repo
   fi
   yum makecache
+  ## 安装CentOS扩展EPEL源并启用PowerTools仓库
+  if [ $SYSTEM_NAME = "CentOS" ]; then
+    yum install -y epel-release
+    sed -i 's|^metalink=|#metalink=|g' /etc/yum.repos.d/epel.repo
+    sed -i 's|^#baseurl=https\?://download.fedoraproject.org/pub/epel/|baseurl=https://mirrors.ustc.edu.cn/epel/|g' /etc/yum.repos.d/epel.repo
+    yum makecache
+  fi
 }
 
 ## 生成基于RedHat系Linux发行版的repo官方更新源：
@@ -251,7 +269,7 @@ function RedHatOfficialMirror() {
     cp -rf /etc/yum.repos.d/* /etc/yum.repos.d.bak
     echo -e '\033[32m已备份原有 repo源 文件至 /etc/yum.repos.d.bak ...... \033[0m'
   fi
-    sleep 3s
+  sleep 3s
   if [ $CENTOS_VERSION = "8" ]; then
     rm -rf /etc/yum.repos.d/CentOS-Linux-AppStream.repo
     rm -rf /etc/yum.repos.d/CentOS-Linux-BaseOS.repo
@@ -489,7 +507,7 @@ name=CentOS Linux $releasever - PowerTools
 mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=PowerTools&infra=$infra
 #baseurl=http://mirror.centos.org/$contentdir/$releasever/PowerTools/$basearch/os/
 gpgcheck=1
-enabled=0
+enabled=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 EOF
     cat >/etc/yum.repos.d/CentOS-Linux-Sources.repo <<\EOF
@@ -984,167 +1002,209 @@ EOF
 
 ## 环境搭建：
 function EnvStructures() {
-  ## 安装Docker
+  ## 基于 Debian 的安装方法
   if [ $SYSTEM = "Debian" ]; then
-    DOCKERJUDGMENT="dpkg -l"
+    ## 卸载旧版本Node版本，从而确保安装新版本
+    apt remove -y nodejs npm >/dev/null 2>&1
+    rm -rf /etc/apt/sources.list.d/nodesource.list >/dev/null 2>&1
+    ## 安装需要的软件包
+    apt install -y wget curl net-tools openssh-server git perl moreutils
+    ## 安装Nodejs与NPM
+    curl -sL https://deb.nodesource.com/setup_14.x | bash -
+    sed -i '1,$d' /etc/apt/sources.list.d/nodesource.list
+    echo "deb https://mirrors.ustc.edu.cn/nodesource/deb/node_14.x $SYSTEM_VERSION main" >>/etc/apt/sources.list.d/nodesource.list
+    echo "deb-src https://mirrors.ustc.edu.cn/nodesource/deb/node_14.x $SYSTEM_VERSION main" >>/etc/apt/sources.list.d/nodesource.list
+    apt update
+    apt install -y nodejs
+    apt autoremove -y
+  ## 基于 RedHat 的安装方法
   elif [ $SYSTEM = "RedHat" ]; then
-    DOCKERJUDGMENT="rpm -qa"
+    ## 卸载旧版本Node版本，从而确保安装新版本
+    yum remove -y nodejs npm >/dev/null 2>&1
+    rm -rf /etc/yum.repos.d/nodesource-*.repo >/dev/null 2>&1
+    ## 安装需要的软件包
+    yum install -y wget curl net-tools openssh-server git perl moreutils
+    ## 安装Nodejs与NPM
+    curl -sL https://rpm.nodesource.com/setup_14.x | bash -
+    sed -i "s#rpm.nodesource.com#mirrors.ustc.edu.cn/nodesource/rpm#" /etc/yum.repos.d/nodesource-*.repo
+    yum makecache
+    yum install -y nodejs
+    yum autoremove -y
   fi
-  $DOCKERJUDGMENT | grep docker -wq  
-  if [ $? -ne 0 ];then
-    if [ $SYSTEM_NAME = "Ubuntu" ]; then
-      apt remove -y docker docker-engine docker.io containerd runc
-      apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-      add-apt-repository -y "deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu $SYSTEM_VERSION stable"
-      apt update
-      apt install -y docker-ce docker-ce-cli containerd.io
-    elif [ $SYSTEM_NAME = "Debian" ]; then
-      apt remove -y docker docker-engine docker.io containerd runc
-      apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-      curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
-      add-apt-repository -y "deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/debian $SYSTEM_VERSION stable"
-      apt update
-      apt install -y docker-ce docker-ce-cli containerd.io
-    elif [ $SYSTEM_NAME = "CentOS" ]; then
-      firewall-cmd --zone=public --add-port=5678/tcp --permanent
-      systemctl reload firewalld
-      yum remove -y docker* runc
-      yum install -y yum-utils device-mapper-persistent-data lvm2
-      yum-config-manager --add-repo https://mirrors.ustc.edu.cn/docker-ce/linux/centos/docker-ce.repo
-      yum makecache
-      yum install -y docker-ce docker-ce-cli containerd.io
-    elif [ $SYSTEM_NAME = "Fedora" ]; then
-      firewall-cmd --zone=public --add-port=5678/tcp --permanent
-      systemctl reload firewalld
-      yum remove -y docker* runc
-      yum -y install yum-utils device-mapper-persistent-data lvm2
-      yum config-manager --add-repo https://mirrors.ustc.edu.cn/docker-ce/linux/fedora/docker-ce.repo
-      yum makecache
-      yum install -y docker-ce docker-ce-cli containerd.io
-    else
-      firewall-cmd --zone=public --add-port=5678/tcp --permanent
-      systemctl reload firewalld
+  ## 安装Nodejs与NPM备用方案
+  VERIFICATION=$(node -v | cut -c2)
+  if [ $VERIFICATION != 1 ]; then
+    echo -e '\033[37m常规方法未安装成功，正在执行备用方案，下载网速可能过慢请耐心等候...... \033[0m'
+    sleep 3s
+    if [ $SYSTEM = "Debian" ]; then
+      apt remove -y nodejs npm >/dev/null 2>&1
+      rm -rf /etc/apt/sources.list.d/nodesource.list >/dev/null 2>&1
+      curl -sL https://deb.nodesource.com/setup_14.x | bash -
+      apt install -y nodejs
+    elif [ $SYSTEM = "RedHat" ]; then
+      yum remove -y nodejs npm >/dev/null 2>&1
+      rm -rf /etc/yum.repos.d/nodesource-*.repo >/dev/null 2>&1
+      curl -sL https://rpm.nodesource.com/setup_14.x | bash -
+      apt install -y nodejs
     fi
   fi
-  ## 配置国内镜像仓库加速
-  ls /etc | grep /docker/daemon.json -wq
-  if [ $? -eq 0 ];then
-    cp /etc/docker/daemon.json /etc/docker/daemon.json.bak
-    echo -e "\033[32m已备份原有daemon.json...... \033[0m"
-    sed -i '1,$d' /etc/docker/daemon.json
-    echo '{"registry-mirrors": ["https://registry.cn-hangzhou.aliyuncs.com"]}' >>/etc/docker/daemon.json
-    systemctl daemon-reload
-    systemctl restart docker
-  else
-    mkdir -p /etc/docker
-    touch /etc/docker/daemon.json
-    echo '{"registry-mirrors": ["https://registry.cn-hangzhou.aliyuncs.com"]}' >>/etc/docker/daemon.json
-    systemctl daemon-reload
-    systemctl restart docker
-  fi
-  ## 从镜像仓库中拉取大佬镜像
-  docker pull evinedeng/jd:gitee
 }
 
 ## 项目部署：
 function ProjectDeployment() {
-  ## 启动容器
-  docker run -dit \
-  -v /opt/jd/config:/jd/config `# 设置配置文件的主机挂载目录为/opt` \
-  -v /opt/jd/log:/jd/log `# 设置日志的主机挂载目录为/opt` \
-  -p 5678:5678 `# 设置端口映射，格式为 "内部端口号:外部端口号" ，外部端口号可自定义` \
-  -e ENABLE_HANGUP=true `# 启用挂机功能` \
-  -e ENABLE_WEB_PANEL=true `# 启用控制面板功能` \
-  --name jd `# 设置容器名为jd` \
-  --network bridge `# 设置网络为桥接，直连主机` \
-  --hostname jd `# 设置主机名为jd` \
-  --restart always `# 设置容器开机自启` \
-  evinedeng/jd:gitee
-}
-
-## 一键脚本：
-function AutoScript() {
-  docker exec -it jd bash git_pull.sh > /dev/null 2>&1
-  ## 编写一键执行所有活动脚本：
-  touch /opt/jd/run-all.sh
-  docker exec -it jd bash jd.sh | grep -o 'jd_[a-z].*' >/opt/jd/run-all.sh
-  docker exec -it jd bash jd.sh | grep -o 'jx_[a-z].*' >>/opt/jd/run-all.sh
-  sed -i 's/^/docker exec -it jd bash jd.sh &/g' /opt/jd/run-all.sh
-  sed -i 's/.js/ now/g' /opt/jd/run-all.sh
-  sed -i '1i\#!/bin/bash' /opt/jd/run-all.sh
-  ## 编写一键更新脚本：
-  touch /opt/jd/manual-update.sh
-  cat >/opt/jd/manual-update.sh <<EOF
-#!/bin/bash
-docker exec -it jd bash git_pull.sh
-rm -rf /opt/jd/run-all.sh
-touch /opt/jd/run-all.sh
-docker exec -it jd bash jd.sh | grep -o 'jd_[a-z].*' > /opt/jd/run-all.sh
-docker exec -it jd bash jd.sh | grep -o 'jx_[a-z].*' >> /opt/jd/run-all.sh
-sed -i 's/^/docker exec -it jd bash jd.sh &/g' /opt/jd/run-all.sh
-sed -i 's/.js/ now/g' /opt/jd/run-all.sh
-sed -i '1i\#!/bin/bash' /opt/jd/run-all.sh
-dos2unix /opt/jd/run-all.sh
-EOF
-  if [ $SYSTEM = "Debian" ]; then
-    apt install -y dos2unix
-  elif [ $SYSTEM = "RedHat" ]; then
-    yum install -y dos2unix
+  ## 配置SSH服务
+  service ssh enable >/dev/null 2>&1
+  service ssh start >/dev/null 2>&1
+  echo "StrictHostKeyChecking no" >>/etc/ssh/ssh_config
+  service ssh restart >/dev/null 2>&1
+  ## 配置SSH密钥文件夹
+  ls ~ | grep .ssh -rwq
+  if [ $? -eq 0 ]; then
+    ## 检测当前用户是否存在私钥
+    ls ~/.ssh | grep id_rsa.bak -wq
+    if [ $? -eq 0 ]; then
+      rm -rf ~/.ssh/id_rsa
+      echo -e "\033[31m检测到已备份的私钥，跳过备份操作...... \033[0m"
+      sleep 2s
+    else
+      mv ~/.ssh/id_rsa ~/.ssh/id_rsa.bak >/dev/null 2>&1
+    fi
+    ## 检测当前用户是否存在公钥
+    ls ~/.ssh | grep id_rsa.pub.bak -wq
+    if [ $? -eq 0 ]; then
+      rm -rf ~/.ssh/id_rsa.pub
+      echo -e "\033[31m检测到已备份的公钥，跳过备份操作...... \033[0m"
+      sleep 2s
+    else
+      mv ~/.ssh/id_rsa.pub ~/.ssh/id_rsa.pub.bak >/dev/null 2>&1
+    fi
+  else
+    mkdir -p ~/.ssh
   fi
-  ## 格式化一键脚本
-  dos2unix /opt/jd/run-all.sh
-  dos2unix /opt/jd/manual-update.sh
-  ## 更新活动脚本
-  bash /opt/jd/manual-update.sh
+  ## 通过添加SSH私钥与公钥解决访问lxk/jd_scripts私有库的权限问题
+  wget https://gitee.com/SuperManito/JD-FreeFuck/raw/main/source/id_rsa -O ~/.ssh/id_rsa
+  chmod 600 ~/.ssh/id_rsa
+  ssh-keygen -y -f ~/.ssh/id_rsa >~/.ssh/id_rsa.pub
+  ## 下载源码并解压至目录
+  wget -P /opt https://gitee.com/SuperManito/JD-FreeFuck/attach_files/620461/download/jd.tar
+  mkdir -p $BASE
+  tar -xvf /opt/jd.tar -C $BASE
+  rm -rf /opt/jd.tar
+  mkdir $BASE/config
+  ## 更换新的文件
+  wget https://gitee.com/SuperManito/JD-FreeFuck/raw/main/source/jd.sh -O $BASE/jd.sh
+  wget https://gitee.com/SuperManito/JD-FreeFuck/raw/main/sample/config.sh.sample -O $BASE/sample/config.sh.sample
+  ## 创建项目配置文件与定时任务配置文件
+  cp $BASE/sample/config.sh.sample $BASE/config/config.sh
+  cp $BASE/sample/computer.list.sample $BASE/config/crontab.list
+  ## 更新脚本，导入LXK0301大佬gitee库活动脚本
+  bash $BASE/git_pull.sh
+  bash $BASE/git_pull.sh >/dev/null 2>&1
+  ## 安装控制面板功能
+  firewall-cmd --zone=public --add-port=5678/tcp --permanent >/dev/null 2>&1
+  systemctl reload firewalld >/dev/null 2>&1
+  cp $BASE/sample/auth.json $BASE/config/auth.json
+  cd $BASE/panel
+  npm install || npm install --registry=https://registry.npm.taobao.org
+  npm install -g pm2
+  pm2 start server.js
+  cd $BASE
+  ## 配置定时任务
+  sed -i "s#/home/myid/jd#$BASE#g" $BASE/config/crontab.list
 }
 
 ## 更改配置文件：
 function SetConfig() {
-  sed -i "27c Cookie1=$COOKIE1" /opt/jd/config/config.sh
-  sed -i "28c Cookie2=$COOKIE2" /opt/jd/config/config.sh
-  sed -i "29c Cookie3=$COOKIE3" /opt/jd/config/config.sh
-  sed -i "30c Cookie4=$COOKIE4" /opt/jd/config/config.sh
-  sed -i "31c Cookie5=$COOKIE5" /opt/jd/config/config.sh
-  sed -i "32c Cookie6=$COOKIE6" /opt/jd/config/config.sh
-  sed -i "70c export PUSH_KEY=$SERVERJIANG" /opt/jd/config/config.sh
+  sed -i "28c Cookie1=$COOKIE1" $BASE/config/config.sh
+  sed -i "29c Cookie2=$COOKIE2" $BASE/config/config.sh
+  sed -i "30c Cookie3=$COOKIE3" $BASE/config/config.sh
+  sed -i "31c Cookie4=$COOKIE4" $BASE/config/config.sh
+  sed -i "32c Cookie5=$COOKIE5" $BASE/config/config.sh
+  sed -i "33c Cookie6=$COOKIE6" $BASE/config/config.sh
 }
 
-#部署结果判定：
-function ResultJudgment() {
-  docker ps | grep evinedeng/jd:gitee -wq
+## 一键脚本：
+function AutoScript() {
+  ## 编写一键执行所有活动脚本
+  touch $BASE/run-all.sh
+  bash $BASE/jd.sh | grep -o 'jd_[a-z].*' >$BASE/run-all.sh
+  bash $BASE/jd.sh | grep -o 'jx_[a-z].*' >>$BASE/run-all.sh
+  sed -i 's/^/bash jd.sh &/g' $BASE/run-all.sh
+  sed -i 's/.js/ now/g' $BASE/run-all.sh
+  sed -i '1i\#!/bin/bash' $BASE/run-all.sh
+  sed -i "s/bash jd.sh jd_delCoupon now//g" run-all.sh
+  sed -i "s/bash jd.sh jd_family now//g" run-all.sh
+  cat $BASE/run-all.sh | grep jd_crazy_joy_coin -wq
   if [ $? -eq 0 ]; then
-    echo -e ''
-    echo -e "\033[32m +----------- 已启用控制面板功能 -----------+ \033[0m"
-    echo -e "\033[32m | 本机访问   http://127.0.0.1:5678         | \033[0m"
-    echo -e "\033[32m | 局域网访问 http://本机外部网络IP:5678    | \033[0m"
-    echo -e "\033[32m | 登录用户名：admin，初始密码：adminadmin  | \033[0m"
+    sed -i "s/bash jd.sh jd_crazy_joy_coin now//g" run-all.sh
+    echo "bash jd.sh jd_crazy_joy_coin now" >>run-all.sh
+  fi
+  sed -i '/^\s*$/d' run-all.sh
+  ## 下载最新的一键更新脚本
+  wget https://gitee.com/SuperManito/JD-FreeFuck/raw/main/manual-update.sh -O $BASE/manual-update.sh >/dev/null 2>&1
+}
+
+## 部署结果判定：
+function ResultJudgment() {
+  ## 判定控制面板是否安装成功
+  netstat -anp | grep 5678 -wq
+  if [ $? -eq 0 ]; then
+    echo -e "\033[32m +------- 已 启 用 控 制 面 板 功 能 -------+ \033[0m"
+    echo -e "\033[32m |                                          | \033[0m"
+    echo -e "\033[32m | 本地访问：http://127.0.0.1:5678          | \033[0m"
+    echo -e "\033[32m |                                          | \033[0m"
+    echo -e "\033[32m | 外部访问：http://内部或外部IP地址:5678   | \033[0m"
+    echo -e "\033[32m |                                          | \033[0m"
+    echo -e "\033[32m | 初始用户名：admin，初始密码：adminadmin  | \033[0m"
+    echo -e "\033[32m |                                          | \033[0m"
     echo -e "\033[32m +------------------------------------------+ \033[0m"
+  else
+    echo -e "\033[31m -------------- 控制面板安装失败 -------------- \033[0m"
+  fi
+  sleep 3s
+  ## 判定Nodejs是否安装成功
+  VERIFICATION=$(node -v | cut -c2)
+  if [ $VERIFICATION = "1" ]; then
     echo -e ''
-    sleep 3s
-    echo -e "\033[32m --------------------- 一键部署成功，请执行 bash run-all.sh 命令开始你的薅羊毛行为 --------------------- \033[0m"
-    echo -e "\033[32m +=====================================================================================================+ \033[0m"
-    echo -e "\033[32m | 注意：1. 该项目配置文件以及一键脚本所在目录为/opt/jd                                                | \033[0m"
-    echo -e "\033[32m |                                                                                                     | \033[0m"
-    echo -e "\033[32m |       2. 此项目涉及 Docker 容器技术，如果你对 Docker基础命令 一无所知，那么请不要随意改动容器       | \033[0m"
-    echo -e "\033[32m |                                                                                                     | \033[0m"
-    echo -e "\033[32m |       3. 执行 run-all 脚本期间可能会卡住或运行挂机脚本，可通过命令 Ctrl+C 跳过继续执行剩余活动脚本  | \033[0m"
-    echo -e "\033[32m |                                                                                                     | \033[0m"
-    echo -e "\033[32m |       4. 由于京东活动一直变化所以会出现无法参加活动、报错等正常现象，可手动更新活动脚本             | \033[0m"
-    echo -e "\033[32m |                                                                                                     | \033[0m"
-    echo -e "\033[32m |       5. 如果需要更新活动脚本，请执行 bash manual-update.sh 命令进行一键更新即可                    | \033[0m"
-    echo -e "\033[32m |                                                                                                     | \033[0m"
-    echo -e "\033[32m |       6. 之前填入的 Cookie 部分内容具有一定的时效性，若提示失效请根据教程重新获取并通过命令手动更新 | \033[0m"
-    echo -e "\033[32m |                                                                                                     | \033[0m"
-    echo -e "\033[32m |       7. 如果需要查看帮助文档以及获取更多功能，请通过 docker exec -it jd cat readme.md 命令进行查看 | \033[0m"
-    echo -e "\033[32m |                                                                                                     | \033[0m"
-    echo -e "\033[32m | 定义：run-all.sh 为本人编写的一键执行所有活动脚本，manual-update.sh 为本人编写的一键更新脚本        | \033[0m"
-    echo -e "\033[32m |                                                                                                     | \033[0m"
-    echo -e "\033[32m |       仍可通过原作者 docker exec -it jd bash jd.sh 命令查看活动列表并执行特定活动脚本               | \033[0m"
-    echo -e "\033[32m +=====================================================================================================+ \033[0m"
-    echo -e "\033[32m --------------------- 更多帮助请访问:  https://github.com/SuperManito/JD-FreeFuck --------------------- \033[0m"
+    echo -e "\033[32m --------------------------- 一键部署成功，请执行 bash run-all.sh 命令开始您的薅羊毛行为 --------------------------- \033[0m"
+    echo -e "\033[32m +=================================================================================================================+ \033[0m"
+    echo -e "\033[32m |                                                                                                                 | \033[0m"
+    echo -e "\033[32m | 定义：run-all.sh 为一键执行所有活动脚本，manual-update.sh 为一键更新脚本                                        | \033[0m"
+    echo -e "\033[32m |                                                                                                                 | \033[0m"
+    echo -e "\033[32m |       如果想要执行特定活动脚本，请通过命令 bash jd.sh 查看教程                                                  | \033[0m"
+    echo -e "\033[32m |                                                                                                                 | \033[0m"
+    echo -e "\033[32m | 注意：1. 该项目文件以及一键脚本的安装目录为$BASE                                                             | \033[0m"
+    echo -e "\033[32m |                                                                                                                 | \033[0m"
+    echo -e "\033[32m |       2. 为了保证脚本的正常运行，请不要更改任何组件的位置以避免出现未知的错误                                   | \033[0m"
+    echo -e "\033[32m |                                                                                                                 | \033[0m"
+    echo -e "\033[32m |       3. 手动执行 run-all.sh 脚本后无需守在电脑旁，会自动在最后运行挂机活动脚本                                 | \033[0m"
+    echo -e "\033[32m |                                                                                                                 | \033[0m"
+    if [ $SYSTEM = "Debian" ]; then
+      echo -e "\033[32m |       4. 执行 run-all 脚本期间如果卡住，可按回车键尝试或通过命令 Ctrl + Z 跳过继续执行剩余活动脚本              | \033[0m"
+    elif [ $SYSTEM = "RedHat" ]; then
+      echo -e "\033[32m |       4. 执行 run-all 脚本期间如果卡住，可按回车键尝试或通过命令 Ctrl + C 跳过继续执行剩余活动脚本              | \033[0m"
+    fi
+    echo -e "\033[32m |                                                                                                                 | \033[0m"
+    echo -e "\033[32m |       5. 由于京东活动一直变化可能会出现无法参加活动、报错等正常现象，可手动更新活动脚本                         | \033[0m"
+    echo -e "\033[32m |                                                                                                                 | \033[0m"
+    echo -e "\033[32m |       6. 如果需要更新活动脚本，请执行 bash manual-update.sh 命令一键更新即可，它会同步更新 run-all.sh 脚本      | \033[0m"
+    echo -e "\033[32m |                                                                                                                 | \033[0m"
+    echo -e "\033[32m |       7. 除手动运行活动脚本外该项目还会通过定时的方式全天候自动运行活动脚本，具体运行记录可通过日志查看         | \033[0m"
+    echo -e "\033[32m |                                                                                                                 | \033[0m"
+    echo -e "\033[32m |       8. 该项目已默认配置好 Crontab 定时任务，定时配置文件 crontab.list 会通过活动脚本的更新而同步更新          | \033[0m"
+    echo -e "\033[32m |                                                                                                                 | \033[0m"
+    echo -e "\033[32m |       9. 之前填入的 Cookie 部分内容具有一定的时效性，若提示失效请根据教程重新获取并通过命令手动更新             | \033[0m"
+    echo -e "\033[32m |                                                                                                                 | \033[0m"
+    echo -e "\033[32m |       10. 我不是活动脚本的开发者，但后续使用遇到任何问题都可访问本项目寻求帮助，制作不易，理解万岁              | \033[0m"
+    echo -e "\033[32m |                                                                                                                 | \033[0m"
+    echo -e "\033[32m +=================================================================================================================+ \033[0m"
+    echo -e "\033[32m --------------------------- 更多帮助请访问   https://github.com/SuperManito/JD-FreeFuck --------------------------- \033[0m"
+    echo -e "\033[32m --------------------------- Github & Gitee   https://gitee.com/SuperManito/JD-FreeFuck  --------------------------- \033[0m"
+    echo -e ''
+    echo -e "\033[32m ------------------------------- 如果老板成功薅到羊毛，可对我进行打赏，感谢您的支持！------------------------------- \033[0m"
   else
     echo -e "\033[31m -------------- 一键部署失败 -------------- \033[0m"
+    echo -e "\033[31m 原因：Nodejs未安装成功，请检查网络相关问题 \033[0m"
   fi
 }
 
@@ -1153,6 +1213,6 @@ SystemJudgment
 ReplaceMirror
 EnvStructures
 ProjectDeployment
-AutoScript
 SetConfig
+AutoScript
 ResultJudgment
