@@ -7,11 +7,13 @@ __如果您觉得这个项目不错的话可以在右上角给颗⭐吗？方便
 > `修复` 代表有错误已经修复完成需要执行更新命令\
 > 具体内容和命令请前往 [Wiki](https://github.com/SuperManito/JD-FreeFuck/wiki/) 查看通知
 
-- __2021/2/25 15:00 `通知`__
-ㅤ本项目已升级换代成全新的版本，全新的教程和Readme，如有遇到问题请立即反馈，谢谢......
+- __2021/2/26 17:55 `更新`__
+ㅤ更新了 `manual-update` 一键更新脚本。
+- __2021/2/26 14:40 `修复`__
+ㅤ修复了 `Liunx` 版本定时重复的问题， `Docker` 版本还在加班排错中，可手动添加定时任务[点此查看](https://github.com/SuperManito/JD-FreeFuck/wiki/%E4%B8%B4%E6%97%B6%E6%B7%BB%E5%8A%A0%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1)，请持续关注此项目......
 
-- __2021/2/25 14:30 `更新`__
-ㅤ更新了 `manual-update.sh` 一键更新脚本，增加了新的功能。
+- __2021/2/26 10:00 `通知`__
+ㅤ目前 `Docker` 版定时错误，正在紧急处理中，请持续关注此项目......
 
 - __2021/2/25 10:00 `修复`__
 ㅤ修复了一键生成互助码脚本的错误。
@@ -30,9 +32,9 @@ __如果您觉得这个项目不错的话可以在右上角给颗⭐吗？方便
 
 ***
 
-# 《JD薅羊毛》一键部署 For Linux
-- __用途：通过自动化脚本参与JD商城的各种活动从而白嫖京豆__
-- __适用平台：PC、VPS (虚拟专用服务器)、NAS、软路由等__
+# __《JD薅羊毛》一键部署 For Linux__
+- __用途：通过自动化脚本参与JD商城的各种活动从而获取京豆用于购物抵扣__
+- __适用平台：PC、VPS (虚拟专用服务器) 、NAS 、软路由__
 - __适用环境：Linux & Docker Server__
 
 __ㅤㅤ`Telegram` 通知频道：[ t.me/jd_freefuck ](https://t.me/jd_freefuck)__
@@ -62,8 +64,8 @@ __ㅤㅤ`码云Gitee` 同步更新此项目，建议收藏国内项目发布页[
 
 ***
 
-# 项目说明：
-#### 1. 本项目开源免费供大家使用，如果您在其它任何地方发现以 `付费` 的形式 `传播与使用` 请积极抵制并向我反馈。
+# 项目声明：
+#### 1. 本项目开源免费使用，如果您在其它任何地方发现以 `付费` 的形式 `传播与使用` 请积极抵制并向我反馈。
 #### 2. 本项目代码各处均有注释其含义，所有脚本中没有附加、偷跑任何互助码，无任何第三方链接，无任何私利。
 #### 3. 本项目基于 [ Evine ](https://gitee.com/evine) 前辈开发的源码而制作，包括 `Docker` 版所使用的镜像，后续的维护与更新均建立于此之上。
 #### 4. 本项目所使用的活动脚本均由[ lxk0301 ](https://gitee.com/lxk0301)大佬提供，我不是活动脚本的开发者，所有与活动相关的问题均与我无关。
@@ -80,11 +82,11 @@ __请ㅤㅤ认ㅤㅤ真ㅤㅤ阅ㅤㅤ读ㅤㅤ教ㅤㅤ程ㅤ，ㅤ90%ㅤㅤ的
 
 ㅤ
 # 一、前言
-#### 1. 本项目根据安装平台区分为 `Linux` 与 `Docker` 两个版本，分别提供对应的教程与脚本
-#### 2. `Linux` 为系统直装版本，支持四大常用 GNU/Linux 发行版，仅适用于在  `PC` | `VPS`  平台部署
-#### 3. `Docker` 为容器版本，为通用版本，建议用于在  `NAS` | `软路由`  平台部署，占用资源较低但不便于使用
-#### 4. 两版本的部署教程与使用教程均不相同，不要重复和错误使用，请认真阅读所有教程内容
-#### 5. 建议优先使用 `Linux` 版本，将得到本人第一时间的维护与更新， `Docker` 版本主要靠用户的反馈来维护更新
+#### 1. 本项目根据安装平台区分为 `Linux` 与 `Docker` 两个版本，分别提供对应的脚本与教程
+#### 2. `Linux` 为系统直装版本，适配常用 GNU/Linux 发行版，仅适用于在 `PC` | `VPS` 平台部署
+#### 3. `Docker` 为容器版本，为通用版本，建议用于在 `NAS` | `软路由` 平台部署，占用资源较低
+#### 4. 两版本的部署教程与使用教程均不相同，不要重复、错误使用，请认真阅读所有教程内容
+#### 5. 建议优先使用 `Linux` 版本，将得到本人第一时间的维护与更新， `Docker` 版本主要靠用户的反馈来维护、
 ㅤ
 
 ***
@@ -101,17 +103,19 @@ __请ㅤㅤ认ㅤㅤ真ㅤㅤ阅ㅤㅤ读ㅤㅤ教ㅤㅤ程ㅤ，ㅤ90%ㅤㅤ的
 
 | 系统 | 支持版本 |
 | ------ | ------ |
-| Ubuntu | 16.04 ~ 20.10 |
-| Debian | 9.0 ~ 10.7 |
+| Ubuntu | 20.04 ~ 20.10 |
+| Debian | 9.0 ~ 10.8 |
+| Kali | 2019 ~ 2021.1 |
 | Fedora | 28 ~ 33 |
 | CentOS | 7.0 ~ 8.3 |
 > 尽量使用最新的稳定版系统，并且安装语言使用 `简体中文` \
+> 仅支持 `Debian` 与 `Redhat` 发行版和及其衍生发行版 \
 > 如果您的系统或版本未在此列表中，可使用 `VPS` 部署方案尝试\
 > 否则请使用 `Docker` 通用版本部署此项目
  _附：[ Windows10 安装 WSL Ubuntu 教程](https://github.com/SuperManito/JD-FreeFuck/wiki/Windows10-Install-WSL-Ubuntu)_
 ### __1. 部署前需知与准备工作：__
 #### I. 检查您的系统是否符合支持范围、是否联网等基本条件
-#### II. 执行部署命令前请切换至 `root用户` ，切换命令为 `sudo -i`
+#### II. 执行部署脚本命令前请切换至 `root用户` ，切换命令为 `sudo -i`
 #### III. 如果您使用的是 CentOS 系统且最小化安装，请通过SSH的方式进入到终端
 #### IV. 本项目默认安装目录为 `/opt/jd` ，如果您不想安装到该目录请自行下载部署脚本并更改相关变量手动部署
 #### V. 由于某些组件的安装受国外网络影响，如果部署失败或遇到报错请再次尝试，否则请严格按照模板提交至[ Issues ](https://github.com/SuperManito/JD-FreeFuck/issues)寻求帮助
@@ -184,11 +188,11 @@ __请ㅤㅤ认ㅤㅤ真ㅤㅤ阅ㅤㅤ读ㅤㅤ教ㅤㅤ程ㅤ，ㅤ90%ㅤㅤ的
     --restart always `# 设置容器开机自启` \
     evinedeng/jd:gitee
 > _注意：如果是旁路由，容器网络类型需使用ㅤ`host` 模式，将 `--network bridge` 参数修改成 `--network host` 即可。_
-### __6. 脚本一键部署：__
+### __6. 脚本部署：__
     #1) 进入容器
     docker exec -it jd /bin/bash
     #2) 执行脚本
-    bash <(curl -sSL https://gitee.com/SuperManito/JD-FreeFuck/raw/main/docker/install-docker.sh)
+    bash <(curl -sSL https://raw.githubusercontent.com/SuperManito/JD-FreeFuck/main/docker/install-docker.sh)
     #3) 退出容器
     exit
 > _注意：此命令请逐一执行。_
@@ -213,7 +217,7 @@ __请ㅤㅤ认ㅤㅤ真ㅤㅤ阅ㅤㅤ读ㅤㅤ教ㅤㅤ程ㅤ，ㅤ90%ㅤㅤ的
     sed -i '31c Cookie4=""' /opt/jd/config/config.sh
     sed -i '32c Cookie5=""' /opt/jd/config/config.sh
     sed -i '33c Cookie6=""' /opt/jd/config/config.sh
-> __参考命令：sed -i '28c Cookie1="pt_pin=xxxxx;pt_key=xxxxxxx;"' /opt/jd/config/config.sh__\
+> _参考命令：sed -i '28c Cookie1="pt_pin=xxxxx;pt_key=xxxxxxx;"' /opt/jd/config/config.sh_\
 > _注意：账号无上限，超出6个账号后需要自行在`config.sh`配置文件创建变量，自行查看配置文件中的注释_
 ### 2. __`Docker` 版本配置教程：__
 > __将获得的`Cookie部分内容`填入下面命令中的“双引号”内，该项目可同时运行多个账号，请按顺序填入下面命令中的“双引号”内，用几个就执行几条对应的命令，复制完整命令到终端并执行：__
@@ -266,6 +270,9 @@ __请ㅤㅤ认ㅤㅤ真ㅤㅤ阅ㅤㅤ读ㅤㅤ教ㅤㅤ程ㅤ，ㅤ90%ㅤㅤ的
 <img src="https://gitee.com/SuperManito/JD-FreeFuck/raw/main/icon/thank.jpg" width="300" height="300" alt="微信赞赏码"/><br/>
 ### 如果您愿意支持此项目，可对我打赏，感激不尽！
 ### 开发不易、维护艰辛，感谢您的理解与支持！
+
+## Stargazers over time
+<img src="https://starchart.cc/SuperManito/JD-FreeFuck.svg" width="1000" height="500" alt="Stargazers over time"/><br/>
 
 ***
 
