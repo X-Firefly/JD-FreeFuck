@@ -1,29 +1,27 @@
 #!/bin/env bash
 ## Author:SuperManito
-## Date:2021-3-4
+## Date:2021-3-9
 
 ## 项目安装目录
-BASE="/opt/jd"
-
-## 代理链接
-Proxy_URL=https://ghproxy.com/
+BASE=/opt/jd
 ## 一键更新脚本地址
-Git_Pull_URL=https://raw.githubusercontent.com/SuperManito/JD-FreeFuck/source/git_pull.sh
-## 配置文件模板地址
-Config_URL=https://raw.githubusercontent.com/SuperManito/JD-FreeFuck/source/sample/config.sh.sample
-
+Git_Pull_URL=https://gitee.com/SuperManito/JD-FreeFuck/raw/source/git_pull.sh
 
 ## 删除旧的脚本
 rm -rf $BASE/manual-update.sh
 ## 更新一键脚本
-wget $Proxy_URL$Git_Pull_URL -O $BASE/git_pull.sh
-## 更新配置文件模板
-wget $Proxy_URL$Config_URL -O $BASE/sample/config.sh.sample
-## 备份当前配置文件
-mv $BASE/config/config.sh $BASE/config/config.sh.bak
-echo -e "已备份当前使用配置文件至 $BASE/config/config.sh.bak ... "
-## 替换新的配置文件
-cp -f $BASE/sample/config.sh.sample $BASE/config/config.sh
+wget $Git_Pull_URL -O git_pull.sh
+## 定义全局变量
+echo "export JD_DIR=$BASE" >>/etc/profile
+source /etc/profile
+## 创建软链接
+ln -sf $BASE/jd.sh /usr/local/bin/jd
+ln -sf $BASE/git_pull.sh /usr/local/bin/git_pull
+ln -sf $BASE/rm_log.sh /usr/local/bin/rm_log
+ln -sf $BASE/export_sharecodes.sh /usr/local/bin/export_sharecodes
+ln -sf /opt/jd/run_all.sh /usr/local/bin/run_all
+## 更新活动脚本
+bash $BASE/git_pull.sh
 
 echo -e "\033[32m +------------------------ 更 新 成 功 ------------------------+ \033[0m"
 echo -e "\033[32m |                                                             | \033[0m"
